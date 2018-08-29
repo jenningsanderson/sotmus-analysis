@@ -1,0 +1,18 @@
+{
+  "name": "sotmus-analysis",
+  "version": "1.0.0",
+  "description": "(Link to OSM-Wayback)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@turf/length": "^6.0.2",
+    "lodash": "^4.17.10",
+    "sqlite3": "^4.0.2",
+    "tile-reduce": "^3.1.1",
+    "topojson": "^3.0.2"
+  }
+}

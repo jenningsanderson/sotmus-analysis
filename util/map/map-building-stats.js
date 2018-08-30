@@ -38,7 +38,7 @@ function* historyGenerator(historyString){
 module.exports = function(data, tile, writeData, done) {
 
   //Extract the osm layer from the mbtile
-  var layer = data.history.detroit_historical_geometries_topojsongeojsonseq;
+  var layer = data.history.historical_topojson;
 
   var featCount = 0;
   var buildings = 0;

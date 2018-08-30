@@ -22,8 +22,8 @@ tileReduce({
     map: path.join(__dirname, mapScript),
     zoom: 15,
     sources: [{name: 'history', mbtiles: path.join("../cities/detroit_historical.mbtiles"), raw: false}],
-    output: fs.createWriteStream('buildings.data'),
-    bbox: [-83.083364,42.338525,-83.030155,42.362908]
+    output: fs.createWriteStream('buildings.data')
+    //bbox: [-83.083364,42.338525,-83.030155,42.362908]
     //geojson: tasks.invalidated[1].geometries[1]
 })
 .on('reduce', function(res){

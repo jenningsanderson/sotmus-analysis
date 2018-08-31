@@ -3,4 +3,6 @@ node_modules/
 *.geometries
 *.geojsonseq
 *.osm.pbf
+nepal_historical.mbtiles
 *INDEX*
+analysis/.ipynb_checkpoints/

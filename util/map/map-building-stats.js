@@ -1,6 +1,6 @@
 var _     = require('lodash');
 var topojson = require('topojson');
-var length = require("@turf/length")
+var turf = require("@turf/turf")
 
 /*
 *    Reconstruct historical objects (generator style)

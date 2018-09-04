@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.css' rel='stylesheet' />
+<!--     <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+ -->
+    <style>
+        body { margin:0; padding:0; }
+        header {height:100px;}
+        #map { position:absolute; top:100px; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id="header">
+  
+</div>
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiamVubmluZ3NhbmRlcnNvbiIsImEiOiIzMHZndnpvIn0.PS-j7fRK3HGU7IE8rbLT9A';
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    zoom: 9,
+    center: [137.9150899566626, 36.25956997955441],
+    style: 'mapbox://styles/mapbox/light-v9',
+    hash: true
+});
+
+map.once('load',function(){
+
+  var start = 1000
+  var end   = 1100
+  var step  = 100
+
+  const then  = new Date(2005,0,1)
+  const today = new Date()
+  const milliseconds_in_a_day = (1000*60*60*24)
+  const diff  = (today - then ) / milliseconds_in_a_day
+
+  // map.showTileBoundaries = true
+  // console.log(map.showTileBoundaries)
+
+  // map.addLayer({
+  //   'id': "detroit-points",
+  //   'type': "circle",
+  //   'source': {
+  //     'type': "geojson",
+  //     'data': "http://epic-analytics.cs.colorado.edu/jennings/detroit-points.geojson"
+  //   },
+  //   'paint': {
+  //     'circle-radius': {
+  //       'property': "edits",
+  //       'stops': [[1, 5], [500, 50]]
+  //     },
+  //     'circle-color':'red',
+  //     'circle-opacity':0.3
+  //   },
+  //   'filter':['all',
+  //     [">=","days_since_2005", start],
+  //     ["<","days_since_2005", end]
+  //   ]
+  // })
+
+  map.addLayer({
+    "id": "editing-heat",
+    "type": "heatmap",
+    'source': {
+      'type': "geojson",
+      'data': "http://epic-analytics.cs.colorado.edu/jennings/detroit-points.geojson"
+    },
+    "maxzoom": 12,
+    "paint": {
+        // Increase the heatmap weight based on frequency and property magnitude
+        "heatmap-weight": [
+            "interpolate",
+            ["linear"],
+            ["get", "edits"],
+            1, 0,
+            500, 1
+        ],
+        // Increase the heatmap color weight weight by zoom level
+        // heatmap-intensity is a multiplier on top of heatmap-weight
+        "heatmap-intensity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0, 1,
+            12, 2
+        ],
+        // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+        // Begin color ramp at 0-stop with a 0-transparancy color
+        // to create a blur-like effect.
+        "heatmap-color": [
+            "interpolate",
+            ["linear"],
+            ["heatmap-density"],
+            0, "rgba(33,102,172,0)",
+            0.2, "rgb(103,169,207)",
+            0.4, "rgb(209,229,240)",
+            0.6, "rgb(253,219,199)",
+            0.8, "rgb(239,138,98)",
+            1, "rgb(178,24,43)"
+        ],
+        // Adjust the heatmap radius by zoom level
+        "heatmap-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            0, 2,
+            12, 20
+        ],
+        // Transition from heatmap to circle layer by zoom level
+        "heatmap-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            7, 1,
+            12, 0.5
+        ],
+    }
+  });
+
+  //Animate?
+  var animation = setInterval(function(){
+    map.setFilter('editing-heat',['all',
+      [">=","days_since_2005", start],
+      ["<","days_since_2005", end]
+    ])
+    start += step;
+    end += step;
+
+    startDate = new Date(start*milliseconds_in_a_day + then.getTime())
+    endDate   = new Date(end*milliseconds_in_a_day + then.getTime())
+    
+    console.log(startDate, endDate)
+
+    if (end > diff){
+      start = 1000
+      end   = 1100
+    }
+  },1000)
+
+})
+
+
+</script>
+
+</body>
+</html>

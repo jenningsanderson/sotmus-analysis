@@ -1,24 +1,10 @@
 var _     = require('lodash');
 var topojson = require('topojson');
-var length = require("@turf/length")
+var turf = require("@turf/turf")
 
 /*
-* This function rebuilds individual geometries from the topojson (unpacking)
-*/
-function rebuildGeometries(hT){
-  var geometries = {}
-  _.sortBy(Object.keys(hT.objects)).forEach(function(version){
-    if (geometries.hasOwnProperty( hT.objects[version].properties['@version'] ) ){
-      geometries[hT.objects[version].properties['@version']].push ( topojson.feature(hT, hT.objects[version]) )
-    }else{
-      geometries[hT.objects[version].properties['@version']] = [ topojson.feature(hT, hT.objects[version]) ]
-    }
-  })
-  return geometries
-}
-
-/*
-    Reconstruct historical objects (generator style)
+*    Reconstruct historical objects (generator style)
+*    [ Could consider making a "smart" feature object that could handle *much* of this? ]
 */
 function* historyGenerator(historyString){
     let hT = JSON.parse(historyString) //hT = historical topology
@@ -30,24 +16,20 @@ function* historyGenerator(historyString){
     return keys.length
 }
 
-/*
-    Could consider making a "smart" feature object that could handle *much* of this?
-*/
-
-
 module.exports = function(data, tile, writeData, done) {
 
   //Extract the osm layer from the mbtile
-  var layer = data.history.detroit_historical_geometries_topojsongeojsonseq;
+  var layer = data.history.historical_topojson;
 
   var featCount = 0;
   var buildings = 0;
   var buildingHeights = 0;
+    
+  var users = {}
 
   layer.features.forEach(function(feat){
 
     featCount++;
-    // console.log(feat)
 
     if (feat.properties.building && feat.properties.building != 'no'){
         
@@ -55,7 +37,7 @@ module.exports = function(data, tile, writeData, done) {
         
         hG = historyGenerator(feat.properties['@history'])
             
-        var done, version, vIt
+        var done, version, vIt, name, thisUser, prevUser
         while(!done){
             vIt     = hG.next();
             version = vIt.value
@@ -63,6 +45,35 @@ module.exports = function(data, tile, writeData, done) {
             
             if (!done){
                 
+                // Record the edge
+                thisUser = version.properties['@user']
+                if (version.properties['@version']>1){
+                    var key = `${thisUser},${prevUser}`
+                    
+                    if ( users.hasOwnProperty(key) ){
+                        users[key] += 1
+                    }else{
+                        users[key] = 1
+                    }
+                }
+                prevUser = thisUser;
+                
+                
+                //attributes
+                if ( version.properties.hasOwnProperty('aA') ){
+                  
+                  if ( version.properties.aA.hasOwnProperty('name') ){
+                    name = version.properties.aA.name
+                  }
+                }
+                
+//                 if ( version.properties.hasOwnProperty('aM') ){
+//                   if ( version.properties.aM.hasOwnProperty('name') ){
+//                     //
+//                   }
+//                 }
+                
+                //Write the row
                 writeData(`${[
                     feat.properties['@id'],
                     version.properties['@user'],
@@ -70,15 +81,13 @@ module.exports = function(data, tile, writeData, done) {
                     version.properties['@minorVersion'],
                     version.properties['@validSince'],
                     version.properties['@validUntil'],
-                    version.geometry.type
+                    name
                           ].join("\t")}\n`)
             }
             
         }
-          
     }
-
   });
 
-  done(null, [featCount, buildings, buildingHeights])
+  done(null, [users,0])
 };

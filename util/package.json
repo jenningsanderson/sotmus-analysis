@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@turf/area": "^6.0.1",
     "@turf/length": "^6.0.2",
+    "@turf/turf": "^5.1.6",
     "lodash": "^4.17.10",
     "sqlite3": "^4.0.2",
     "tile-reduce": "^3.1.1",

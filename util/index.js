@@ -5,7 +5,7 @@ var path = require('path');
 var tileReduce = require('@mapbox/tile-reduce');
 var _ = require('lodash')
 
-var mapScript = "map-basic-stats.js"
+var mapScript = "map/map-basic-stats.js"
 
 var file = "detroit"
 

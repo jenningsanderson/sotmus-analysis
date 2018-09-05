@@ -1,11 +1,16 @@
+const milliseconds_in_a_day = (1000*60*60*24)
+
 function createD3Timeline(params, brushEvent){
-
+  
   params.docID = params.docID || "timeline-svg"
-
+  
   var svg = d3.select("#"+params.docID),
       margin = {top: 10, right: 20, bottom: 20, left: 50},
       width  = + svg.attr("width")  - margin.left - margin.right,
       height = + svg.attr("height") - margin.top  - margin.bottom;
+  
+  //clear it
+  svg.selectAll("*").remove();
 
   var x = d3.scaleTime().range([0, width]),
       y = d3.scaleLinear().range([height, 0]);
@@ -68,12 +73,55 @@ function createD3Timeline(params, brushEvent){
   function brushed() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
 
-    if (d3.event.sourceEvent.type == 'mouseup'){
-      var s = d3.event.selection || x.range();
-      var brushRange = s.map(x.invert, x)
-      brushEvent(brushRange)
+    if (d3.event.sourceEvent != undefined){
+        if (d3.event.sourceEvent.type == 'mouseup'){
+          var s = d3.event.selection || x.range();
+          var brushRange = s.map(x.invert, x)
+          brushEvent(brushRange)
+          startDate = brushRange[0]
+          endDate   = brushRange[1]
+        }
     }
   }
+  var startDate, endDate;
+    
+  document.getElementById('moveButton').addEventListener('click',function(){
+      startDate = new Date(2015,7,1);
+      endDate   = new Date(2016,7,1);
+      d3.select('.brush').transition().call(brush.move, [x(startDate), x(endDate)]);
+      brushEvent([startDate, endDate])
+  });      
+  
+  function stepBrush(step=30, trail=true){
+    //Now we add the step to it.
+    var step = Number( document.getElementById('stepVal').value ) 
+    console.log(step)
+    startDate = new Date(startDate.getTime() + step * milliseconds_in_a_day)
+    if(trail){
+      endDate   = new Date(endDate.getTime() + step * milliseconds_in_a_day)
+    }
+    
+    console.log(startDate, endDate)
+    d3.select('.brush').transition().call(brush.move, [x(startDate), x(endDate)]);
+    brushEvent([startDate, endDate])
+  }
+    
+  document.getElementById('step').addEventListener('click',stepBrush);
+    
+  var playing, animation
+  document.getElementById('Play').addEventListener('click',function(){
+    if (playing){
+      window.clearInterval(animation);
+      this.innerHTML = "Play"     
+      playing=false;
+    }else{
+      animation = setInterval(function(){
+          stepBrush()
+      },1000);
+      playing=true;
+      this.innerHTML = "Stop";
+    }
+  });
 
   //var zoom = d3.zoom()
   //  .scaleExtent([1, 200])

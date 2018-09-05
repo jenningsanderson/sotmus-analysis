@@ -66,6 +66,13 @@ module.exports = function(data, tile, writeData, done) {
             newName = version.properties.aA.name
           }
         }
+          
+        //location?
+        var center
+        try{
+          center = turf.centroid(version.geometry);
+        }catch(e){
+        }
                                   
         //Write the row
         writeData(`${[
@@ -81,7 +88,8 @@ module.exports = function(data, tile, writeData, done) {
               version.properties['@version'],
               version.properties['@minorVersion'],
               version.properties['@validSince'],
-              version.properties['@validUntil'],              
+              version.properties['@validUntil'],
+              center.geometry.coordinates || undefined
         ].join("\t")}\n`)
       }
     }

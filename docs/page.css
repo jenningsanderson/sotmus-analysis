@@ -1,0 +1,30 @@
+body { margin:0; padding:0; }
+header {height:100px;}
+
+#map { position:absolute; top:100px; bottom:0; width:100%; }
+
+
+/* D3 Timeline */
+.axis {
+  font: 10px sans-serif;
+}
+
+.label {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.brush .extent {
+  stroke: #fff;
+  stroke-opacity: .6;
+  stroke-width: 2px;
+  fill-opacity: .1;
+  shape-rendering: crispEdges;
+}

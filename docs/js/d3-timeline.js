@@ -5,16 +5,18 @@ var maxDate, minDate
 
 var D3Timeline = function(brushEventFunction){
     
-  var x,y,brush,data;
+  var x,y,brush,data,brushOn;
   
   var brushEvent = brushEventFunction;
     
   function drawBrush(){
     d3.select('.brush').transition().call(brush.move, [x(startDate), x(endDate)]);
+    brushOn = true;
   }
     
   this.stepBrush = function(){
     var trail = true
+    var outOfBounds = false;
     var step = Number( document.getElementById('stepVal').value ) 
     
     if ( (startDate.getTime() == minDate.getTime()) && (endDate.getTime() == maxDate.getTime()) ){
@@ -25,12 +27,24 @@ var D3Timeline = function(brushEventFunction){
     }
     
     startDate = new Date(startDate.getTime() + step * milliseconds_in_a_day)
-    if(trail){
-      endDate   = new Date(endDate.getTime() + step * milliseconds_in_a_day)
+    endDate   = new Date(endDate.getTime() + step * milliseconds_in_a_day)
+      
+    if (endDate > maxDate){
+      endDate = maxDate
+      outOfBounds = true;
     }
+      
+    if (startDate > maxDate){
+      startDate = minDate
+      brushEvent([startDate, endDate])
+      return true
+    }
+    
     d3.select('.brush').transition().call(brush.move, [x(startDate), x(endDate)]);
     brushEvent([startDate, endDate])
     console.log("Stepped: "+step+" days | "+startDate + " - " + endDate)
+      
+    return outOfBounds;
   }
     
   function brushed() {
@@ -43,6 +57,12 @@ var D3Timeline = function(brushEventFunction){
           brushEvent(brushRange)
           startDate = brushRange[0]
           endDate   = brushRange[1]
+        }
+        
+        if (s == x.range() ){
+          brushOn = false;
+        }else{
+          brushOn = true;
         }
     }
   }
@@ -113,7 +133,7 @@ var D3Timeline = function(brushEventFunction){
       .attr("class", "brush")
       .call(brush)
   
-    if ( (startDate > minDate) && (endDate < maxDate) ){
+    if ( brushOn && ( (startDate > minDate ) || (endDate < maxDate) ) ){
       drawBrush();
     }else{
       startDate = minDate

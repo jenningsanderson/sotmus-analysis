@@ -26,7 +26,7 @@ var D3Timeline = function(brushEventFunction){
     
     if ( (startDate.getTime() == minDate.getTime()) && (endDate.getTime() == maxDate.getTime()) ){
       console.log("Declaring new dates")
-      endDate   = new Date(startDate.getTime() + 365 * milliseconds_in_a_day)
+      endDate   = new Date(startDate.getTime() + data.length/10 * milliseconds_in_a_day)
       drawBrush();
       console.log(startDate, endDate)
     }
@@ -85,7 +85,7 @@ var D3Timeline = function(brushEventFunction){
     //clear the existing canvas
     svg.selectAll("*").remove();
       
-    x = d3.scaleTime().range([0, width]),
+    x = d3.scaleTime().range([0, width]);
     y = d3.scaleLinear().range([height, 0]);
       
     var xAxis = d3.axisBottom(x),
@@ -96,11 +96,11 @@ var D3Timeline = function(brushEventFunction){
       .extent([[0, 0], [width, height]])
       .on("brush end", brushed);
 
-    var area = d3.area()
-      .curve(d3.curveMonotoneX)
-      .x(function(d) { return x(d.date); })
-      .y0(height)
-      .y1(function(d) { return y(d.count); });
+    // var area = d3.area()
+    //   .curve(d3.curveMonotoneX)
+    //   .x(function(d) { return x(d.date); })
+    //   .y0(height)
+    //   .y1(function(d) { return y(d.count); });
 
     svg.append("defs").append("clipPath")
       .attr("id", "clip")
@@ -122,10 +122,23 @@ var D3Timeline = function(brushEventFunction){
     //max within the dates
     y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
-    focus.append("path")
-      .datum(data)
-      .attr("class", "area")
-      .attr("d", area);
+    var daysShown = ( maxDate.getTime() - minDate.getTime() ) / milliseconds_in_a_day
+    var bandWidth = (width / daysShown)
+
+    focus.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.date); })
+      .attr("y", function(d) { return y(d.count); })
+      .attr("width", bandWidth)
+      .attr("height", function(d) { return height - y(d.count); });
+
+
+    // focus.append("path")
+    //   .datum(data)
+    //   .attr("class", "area")
+    //   .attr("d", area);
 
     focus.append("g")
       .attr("class", "axis axis--x")

@@ -33,6 +33,9 @@ button#show-help{
   shape-rendering: crispEdges;
 }
 
+.bar{
+  fill: steelblue;
+}
 
 .brush .extent {
   stroke: #fff;

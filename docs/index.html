@@ -86,10 +86,12 @@
 
   <div id="sidebar" class="col col--3 prose txt-s pt12 pr12">
     
-    <h2 class="txt-h2 align-center">OpenStreetMap Editing Heatmap</h2>
 
+    <h2 class="txt-h2 align-center">OpenStreetMap Editing Heatmap</h2>
+    
+    <button id="help" class="fr btn round">Collapse</button>
     <h4 class="txt-h4 mt12">What Does This Show?</h4>
-    <p>Objects in OpenStreetMap are often the cumulative product of multiple edits. This visualization displays a point for every edit of a specific type (building, highway, amenity, etc.). Using the heatmap style, the density of these points then shows the relative <em>editing activity</em> for any given time period.</p>
+    <p>Objects in OpenStreetMap are often the cumulative product of multiple edits. This visualization displays a point for every edit of a specific type (building, highway, amenity, etc.). Using a heatmap style, the density of these points then shows the relative <em>editing activity</em> for any given time period.</p>
 
     <p>The <span class='txt-kbd'>Deleted Tiger Tags</span> edit type shows where and when a user (or bot) deleted one of the tiger specific tags from an object (such as <span class="txt-code">tiger:tlid</span> or <span class="txt-code">tiger:county</span>)
     
@@ -97,25 +99,25 @@
 
 
 
-    <h4 class="txt-h4 mt12">How to Use</h4>
+    <h4 class="txt-h4 mt12">Interactivity</h4>
     <ol class="txt-ol">
-      <li class='txt-li'><p class='txt'>Select the type of edit to visualize in the top left (default: buildings)</p></li>
+      <li class='txt-li'><p class='txt'>Select the type of edit to visualize in the top left (default: <span class="txt-kbd">Buildings</span>)</p></li>
 
       <li class='txt-li'><p class='txt'>Clicking and dragging on the graph at the top will filter the map to show only the edits occuring in that time-range.</p></li>
+
+      <li class='txt-li'><p class='txt'>Choose a specific year in the <span class="txt-kbd">Show Years:</span> dropdown menu to zoom the timeline to just that year.</p></li>
     </ol>
 
     <h5 class="txt-h5">Animation</h5>
-    <p>Clicking <span class="txt-kbd">Step</span> will progress the selected time range at the given step value (in days).</p>
-    <p>Clicking <span class="txt-kbd">Play</span> will step once per second until you click <span class="txt-kbd">Stop</span></p>
+    <p>Clicking <span class="btn btn--s btn--red txt-kbd">Step</span> will progress the selected time range at the given <span class="txt-kbd">step</span> value (in days, defaults to 30).</p>
+    <p>Clicking <span class="btn btn--s btn--blue txt-kbd">Play</span> will step once per second until you click <span class="btn btn--s btn--blue txt-kbd">Stop</span></p>
   
-    <h4 class="txt-h4 mt24">How it was built</h4>
-    <div>
+    <h4 class="txt-h4 mt24">How this was built?</h4>
+    <p>The editing history of each object was reconstructed with the <a target="_blank" class="link" href="//github.com/osmlab/osm-wayback">OSM-Wayback</a> utility. This utility turns historical extracts of the full OSM planet history file into a GeoJSON sequence of objects with embedded editing histories. These enriched objects are then fed into <a class="link" target="_blank" href="//github.com/mapbox/tippecanoe">tippecanoe</a> to create <em>historical vector tiles</em>.</p>
+    <p>Using <a class="link" target="_blank" href="//github.com/mapbox/tile-reduce">tile-reduce</a>, the historical vector tiles are processed for specific editing actions / any number of user-defined measures. The output of these scripts are individual editing records that can be turned into GeoJSON (for this visualization) or read by other analyses scripts like Python or R for further analysis.</p>
 
-    </div>
+    <p class="txt-s">Built with <a class="link" href="//github.com/mapbox/">Mapbox</a> tools &amp;<a class="link" href="//github.com/osmlab/osm-wayback">OSM-Wayback</a>, Map Data &copy <a class="link" href="https://www.openstreetmap.org/about"> OSM Contributors</a>. <br><a href="//github.com/jenningsanderson/sotmus-analysis">View on Github</a></p></p>
 
-    <p class="txt-s">Built with <a class="link" href="//mapbox.com">Mapbox</a>, <a class="link" href="//github.com/osmlab/osm-wayback">OSM-Wayback</a>, Map Data &copy <a class="link" href="https://www.openstreetmap.org/about"> OpenStreetMap Contributors</a></p>
-
-    <button id="help" class="btn round">Collapse</button>
 
   </div>
 </section>
@@ -127,7 +129,7 @@ var map = new mapboxgl.Map({
     container: 'map',
     zoom: 9,
     center: [-82.9609, 42.3089],
-    style: 'mapbox://styles/mapbox/light-v9',
+    style: 'mapbox://styles/mapbox/dark-v9',
     hash: true
 });
 
@@ -220,9 +222,8 @@ map.once('load',function(){
       "circle-color": 'red',
       "circle-opacity": 0.6,
       "circle-radius":2
-    }
-      
-  })
+    }  
+  });
     
   map.addLayer({
     "id": "editing-lines",
@@ -235,26 +236,10 @@ map.once('load',function(){
       "line-opacity": 0.6
     }
       
-  })
+  });
   document.getElementById('loading').style.display = 'none';
 
-  //Animate?
-  // var animation = setInterval(function(){
-  //   
-  //   start += step;
-  //   end += step;
-
-  //   startDate = new Date(start*milliseconds_in_a_day + then.getTime())
-  //   endDate   = new Date(end*milliseconds_in_a_day + then.getTime())
-    
-  //   console.log(startDate, endDate)
-
-  //   if (end > diff){
-  //     start = 1000
-  //     end   = 1100
-  //   }
-  // },1000)
-})
+});
     
 var timeline = new D3Timeline(function(brushEvent){
                      startDay = Math.floor( (brushEvent[0].getTime() - then.getTime() ) / milliseconds_in_a_day )
@@ -274,14 +259,22 @@ var timeline = new D3Timeline(function(brushEvent){
                       ])
     
     
-                    })
+})
 
-function reloadTimeline(path, params){
+function reloadTimeline(){
 
   var timelineCounts = [];
-//   document.getElementById('loading').style.display = 'block';
+  var params = {};
+  var year = document.getElementById('year-picker').value
+  if (year==='All'){
+    params = {}
+  }else{
+    year = Number(year)
+    params.minDate = new Date(year,0,1),
+    params.maxDate = new Date(year,11,31)
+  }
 
-  d3.json(path, function(error, data) {
+  d3.json(PATH, function(error, data) {
     if (error) {
       throw error;
     }
@@ -315,7 +308,7 @@ function reloadTimeline(path, params){
 }
 
 //Run the page!
-reloadTimeline(PATH, {});
+reloadTimeline();
     
 function reloadAll(){
   document.getElementById('loading').style.display = 'block';
@@ -323,7 +316,7 @@ function reloadAll(){
 //   },3000);
   makePath();
   map.getSource('data').setData(PATH)
-  reloadTimeline(PATH, {});
+  reloadTimeline();
 }
 
 document.getElementById('help').addEventListener('click',function(e){
@@ -350,19 +343,7 @@ document.getElementById('dataset-picker').addEventListener('change',function(e){
   }
 })
 
-document.getElementById('year-picker').addEventListener('change',function(e){
-  var year = e.target.value;
-  if(year==='All'){
-    reloadTimeline(PATH,{})
-  }else{
-    year = Number(year)
-    reloadTimeline(PATH, {
-      minDate: new Date(year,0,1),
-      maxDate: new Date(year,11,31)
-    })
-    // timeline.fireBrushEvent([new Date(year,0,1),new Date(year,11,31)]);
-  }
-})
+document.getElementById('year-picker').addEventListener('change',reloadTimeline)
   
 document.getElementById('step').addEventListener('click',timeline.stepBrush);
   

@@ -20,21 +20,24 @@
 
 <div id="header" class="flex-parent">
   <div id="loading" 
-       style="z-index:100; position:fixed; top:0; width:100%; height:100px;" 
+       style="z-index:100; position:fixed; top:0; width:100%; height:130px;" 
        class='loading align-center pt6 bg-lighten75'></div>
-  <svg class="flex-child" id='timeline-svg' width="900" height="100"></svg>
+  <svg class="flex-child" id='timeline-svg' width="900" height="130"></svg>
   <div class="flex-child mt6 w120">
     <div class="flex-parent-inline flex-parent--column">
-      <button id="building-btn" class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vt">Building</button>
-      <button id="highway-btn" class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Highway</button>
-      <button id="amenity-btn" class="txt-s btn btn--pill-stroke btn--pill-vb is-active">Amenity</button>
+      <button id="building-btn" class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vt">Buildings</button>
+      <button id="highway-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Highways</button>
+      <button id="names-btn"    class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">New Names</button>
+      <button id="amenity-btn"  class="txt-s btn btn--pill-stroke btn--pill-vb is-active">Amenities</button>
     </div>
   </div>
-  <div class="flex-child">
-    <button id="moveButton" class='btn'>Move</button>  
-    <button id="step" class='btn'>Step</button>   
-    <input id="stepVal" type='text' class='input unround' placeholder='30' value="30"/>
-    <button id="Play" class='btn'>Play</button>   
+  <div id='controls' class="flex-child bg-darken10 round px6 py6">
+    <label for="stepVal" class="txt-s">Step Value (Days) </label>
+    <input id="stepVal" name="stepVal" type='text' class='bg-color--white input input--s unround inline w60' placeholder='30' value="30"/>
+    <div class="align-center py6 ">
+      <button id="Play" class='btn round'>Play</button>
+      <button id="step" class='btn round btn--red'>Step</button>   
+    </div>
   </div>
 </div>
 <div id='map'></div>
@@ -76,7 +79,7 @@ map.once('load',function(){
     "id": "editing-heat",
     "type": "heatmap",
     'source': 'data',
-    "maxzoom": 15,
+    "maxzoom": 13,
     "paint": {
         // Increase the heatmap weight based on frequency and property magnitude
         "heatmap-weight": [
@@ -93,7 +96,7 @@ map.once('load',function(){
             ["linear"],
             ["zoom"],
             0, 1,
-            15, 2
+            13, 2
         ],
         // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
         // Begin color ramp at 0-stop with a 0-transparancy color
@@ -115,7 +118,7 @@ map.once('load',function(){
             ["linear"],
             ["zoom"],
             0, 1,
-            15, 5
+            13, 5
         ],
         // Transition from heatmap to circle layer by zoom level
         "heatmap-opacity": [
@@ -123,10 +126,24 @@ map.once('load',function(){
             ["linear"],
             ["zoom"],
             7, 1,
-            15, 0.5
+            13, 0.5
         ],
     }
   });
+    
+  map.addLayer({
+    "id": "editing-points",
+    "type": "circle",
+    'source': 'data',
+    "minzoom": 13,
+    "paint": {
+      // Increase the heatmap weight based on frequency and property magnitude
+      "circle-color": 'red',
+      "circle-opacity": 0.6,
+      "circle-radius":2
+    }
+      
+  })
   document.getElementById('loading').style.display = 'none';
 
   //Animate?
@@ -147,6 +164,20 @@ map.once('load',function(){
   // },1000)
 })
     
+var timeline = new D3Timeline(function(brushEvent){
+                     startDay = Math.floor( (brushEvent[0].getTime() - then.getTime() ) / milliseconds_in_a_day )
+                     endDay   = Math.floor( (brushEvent[1].getTime() - then.getTime() ) / milliseconds_in_a_day )
+
+                     map.setFilter('editing-heat',['all',
+                        [">=","days_since_2005", startDay],
+                        ["<","days_since_2005", endDay]
+                     ])
+                     map.setFilter('editing-points',['all',
+                        [">=","days_since_2005", startDay],
+                        ["<","days_since_2005", endDay]
+                      ])
+                    })
+
 function reloadTimeline(path){
 
   var timelineCounts = [];
@@ -162,17 +193,9 @@ function reloadTimeline(path){
       timelineCounts.push({date: d, count: f.properties.edits})
     })
 
-    createD3Timeline({
+    timeline.createD3Timeline({
       docID: "timeline-svg",
       data:  timelineCounts//.slice(timelineCounts.length-100,timelineCounts.length)
-    },function(brushEvent){
-      startDay = Math.floor( (brushEvent[0].getTime() - then.getTime() ) / milliseconds_in_a_day )
-      endDay   = Math.floor( (brushEvent[1].getTime() - then.getTime() ) / milliseconds_in_a_day )
-
-      map.setFilter('editing-heat',['all',
-        [">=","days_since_2005", startDay],
-        ["<","days_since_2005", endDay]
-      ])
     })
     document.getElementById('loading').style.display = 'none';
   })
@@ -196,6 +219,7 @@ document.getElementById('building-btn').addEventListener('click',function(){
     this.className = "txt-s btn btn--pill-stroke btn--pill-vt is-active"
     document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
     document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
+    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
     TYPE="building"
     reloadAll();
   }
@@ -207,6 +231,7 @@ document.getElementById('amenity-btn').addEventListener('click',function(){
     this.className = "txt-s btn btn--pill-stroke btn--pill-vb is-active"
     document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
     document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
+    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
     TYPE = "amenity"
     reloadAll();
   }
@@ -218,10 +243,40 @@ document.getElementById('highway-btn').addEventListener('click',function(){
     this.className = "txt-s btn btn--pill-stroke btn--pill-vc is-active"
     document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
     document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
+    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
     TYPE="highway"
     reloadAll();
   }
 })
+    
+document.getElementById('names-btn').addEventListener('click',function(){
+  console.log("names")
+  if (TYPE!='newName'){
+    this.className = "txt-s btn btn--pill-stroke btn--pill-vc is-active"
+    document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
+    document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
+    document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
+    TYPE="newName"
+    reloadAll();
+  }
+})
+  
+document.getElementById('step').addEventListener('click',timeline.stepBrush);
+  
+var animation, playing;
+document.getElementById('Play').addEventListener('click',function(){
+  if (playing){
+    window.clearInterval(animation);
+    this.innerHTML = "Play"     
+    playing=false;
+  }else{
+    animation = setInterval(function(){
+      timeline.stepBrush()
+    },1000);
+    playing=true;
+    this.innerHTML = "Stop";
+  }
+});
 
 </script>
 

@@ -1,9 +1,13 @@
 body { margin:0; padding:0; }
-header {height:100px;}
+header {height:130px;}
 
-#map { position:absolute; top:100px; bottom:0; width:100%; }
+#map { position:absolute; top:130px; bottom:0; width:100%; }
 
-
+#controls{
+  margin-top:10px;
+  max-height:80px;
+}
+    
 /* D3 Timeline */
 .axis {
   font: 10px sans-serif;

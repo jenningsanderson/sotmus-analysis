@@ -23,11 +23,11 @@
        style="z-index:100; position:fixed; top:0; width:100%; height:130px;" 
        class='loading align-center pt6 bg-lighten75'></div>
   <svg class="flex-child" id='timeline-svg' width="900" height="130"></svg>
-  <div class="flex-child mt6 w120">
+  <div class="flex-child mt6 mx6 w160">
     <div class="flex-parent-inline flex-parent--column">
       <button id="building-btn" class="txt-s btn btn--pill-stroke btn--pill-vt is-active">Buildings</button>
       <button id="highway-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Highways</button>
-      <button id="names-btn"    class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">New Names</button>
+      <button id="names-btn"    class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Deleted Tiger Tags</button>
       <button id="amenity-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vb">Amenities</button>
     </div>
   </div>
@@ -144,6 +144,19 @@ map.once('load',function(){
     }
       
   })
+    
+  map.addLayer({
+    "id": "editing-lines",
+    "type": "line",
+    'source': 'data',
+    "minzoom": 13,
+    "paint": {
+      // Increase the heatmap weight based on frequency and property magnitude
+      "line-color": 'green',
+      "line-opacity": 0.6
+    }
+      
+  })
   document.getElementById('loading').style.display = 'none';
 
   //Animate?
@@ -176,6 +189,12 @@ var timeline = new D3Timeline(function(brushEvent){
                         [">=","days_since_2005", startDay],
                         ["<","days_since_2005", endDay]
                       ])
+                     map.setFilter('editing-lines',['all',
+                        [">=","days_since_2005", startDay],
+                        ["<","days_since_2005", endDay]
+                      ])
+    
+    
                     })
 
 function reloadTimeline(path){
@@ -248,12 +267,12 @@ document.getElementById('highway-btn').addEventListener('click',function(){
 })
     
 document.getElementById('names-btn').addEventListener('click',function(){
-  if (TYPE!='newName'){
+  if (TYPE!='tigerDel'){
     this.className = "txt-s btn btn--pill-stroke btn--pill-vc is-active"
     document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
     document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
     document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    TYPE="newName"
+    TYPE="tigerDel"
     reloadAll();
   }
 })

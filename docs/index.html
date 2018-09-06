@@ -25,10 +25,10 @@
   <svg class="flex-child" id='timeline-svg' width="900" height="130"></svg>
   <div class="flex-child mt6 w120">
     <div class="flex-parent-inline flex-parent--column">
-      <button id="building-btn" class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vt">Buildings</button>
+      <button id="building-btn" class="txt-s btn btn--pill-stroke btn--pill-vt is-active">Buildings</button>
       <button id="highway-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Highways</button>
       <button id="names-btn"    class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">New Names</button>
-      <button id="amenity-btn"  class="txt-s btn btn--pill-stroke btn--pill-vb is-active">Amenities</button>
+      <button id="amenity-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vb">Amenities</button>
     </div>
   </div>
   <div id='controls' class="flex-child bg-darken10 round px6 py6">
@@ -52,7 +52,7 @@ var map = new mapboxgl.Map({
     hash: true
 });
 
-var TYPE = "amenity";
+var TYPE = "building";
 var PATH; 
 function makePath(){
   PATH = "data/detroit-"+TYPE+"-points.geojson";

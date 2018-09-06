@@ -18,29 +18,108 @@
 </head>
 <body>
 
-<div id="header" class="flex-parent">
-  <div id="loading" 
-       style="z-index:100; position:fixed; top:0; width:100%; height:130px;" 
-       class='loading align-center pt6 bg-lighten75'></div>
-  <svg class="flex-child" id='timeline-svg' width="900" height="130"></svg>
-  <div class="flex-child mt6 mx6 w160">
-    <div class="flex-parent-inline flex-parent--column">
-      <button id="building-btn" class="txt-s btn btn--pill-stroke btn--pill-vt is-active">Buildings</button>
-      <button id="highway-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Highways</button>
-      <button id="names-btn"    class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vc">Deleted Tiger Tags</button>
-      <button id="amenity-btn"  class="txt-s btn btn--stroke btn--pill-stroke btn--pill-vb">Amenities</button>
+<div id="loading" 
+     style="z-index:100; position:fixed; top:0; width:100%; height:100vh;" 
+     class='loading align-center pt60 bg-lighten75'></div>
+
+
+<section class="grid grid--gut12">
+  <div id="main" class="col col--9">
+
+    <div id="map-header" class="flex-parent">
+      <div class='flex-child px12 py6'>
+        <p class="py6">Select an edit type</p>
+        <div class='select-container'>
+          <select id="dataset-picker" class='select'>
+              <option value="building">Buildings</option>
+              <option value="highway">Highways</option>
+              <option value="amenity">Amenities</option>
+              <option value="newName">New Name Tags</option>
+              <option value="tigerDel">Deleted Tiger Tags</option>
+          </select>
+          <div class='select-arrow'></div>
+        </div>
+      </div>
+
+      <div class="flex-child">
+        <svg class="flex-child" id='timeline-svg' width="800" height="130"></svg>
+      </div>
+
+      <div id='animation-controls' class="flex-child round px6 py6 mx12">
+        <p>Show Years: </p>
+
+        <div class='select-container'>
+          <select id="year-picker" class='select'>
+              <option value="All">All</option>
+              <option value="2008">2008</option>
+              <option value="2009">2009</option>
+              <option value="2010">2010</option>
+              <option value="2011">2011</option>
+              <option value="2012">2012</option>
+              <option value="2013">2013</option>
+              <option value="2014">2014</option>
+              <option value="2015">2015</option>
+              <option value="2016">2016</option>
+              <option value="2017">2017</option>
+              <option value="2018">2018</option>
+          </select>
+          <div class='select-arrow'></div>
+        </div>
+      </div>
+
+      <div id='animation-controls' class="flex-child round px6 py6">
+        <p>Animation Controls</p>
+        <label for="stepVal" class="txt-s">Step: </label>
+        <input id="stepVal" name="stepVal" type='text' class='bg-color--white input input--s unround inline w60' value="30"/><span class='txt-s'>Days</span>
+        <div class="align-center py6 ">
+          <button id="Play" class='btn round'>Play</button>
+          <button id="step" class='btn round btn--red'>Step</button>   
+        </div>
+      </div>
     </div>
+
+    <button id="show-help" style="display:none;" class="btn round">Instructions / About</button>
+
+    <div id="map"></div>
+
   </div>
-  <div id='controls' class="flex-child bg-darken10 round px6 py6">
-    <label for="stepVal" class="txt-s">Step Value (Days) </label>
-    <input id="stepVal" name="stepVal" type='text' class='bg-color--white input input--s unround inline w60' placeholder='30' value="30"/>
-    <div class="align-center py6 ">
-      <button id="Play" class='btn round'>Play</button>
-      <button id="step" class='btn round btn--red'>Step</button>   
+
+  <div id="sidebar" class="col col--3 prose txt-s pt12 pr12">
+    
+    <h2 class="txt-h2 align-center">OpenStreetMap Editing Heatmap</h2>
+
+    <h4 class="txt-h4 mt12">What Does This Show?</h4>
+    <p>Objects in OpenStreetMap are often the cumulative product of multiple edits. This visualization displays a point for every edit of a specific type (building, highway, amenity, etc.). Using the heatmap style, the density of these points then shows the relative <em>editing activity</em> for any given time period.</p>
+
+    <p>The <span class='txt-kbd'>Deleted Tiger Tags</span> edit type shows where and when a user (or bot) deleted one of the tiger specific tags from an object (such as <span class="txt-code">tiger:tlid</span> or <span class="txt-code">tiger:county</span>)
+    
+    <p>The <span class='txt-kbd'>New Name Tags</span> edit type shows where and when the <span class='txt-code'>name</span> attribute was added to an object.</p>
+
+
+
+    <h4 class="txt-h4 mt12">How to Use</h4>
+    <ol class="txt-ol">
+      <li class='txt-li'><p class='txt'>Select the type of edit to visualize in the top left (default: buildings)</p></li>
+
+      <li class='txt-li'><p class='txt'>Clicking and dragging on the graph at the top will filter the map to show only the edits occuring in that time-range.</p></li>
+    </ol>
+
+    <h5 class="txt-h5">Animation</h5>
+    <p>Clicking <span class="txt-kbd">Step</span> will progress the selected time range at the given step value (in days).</p>
+    <p>Clicking <span class="txt-kbd">Play</span> will step once per second until you click <span class="txt-kbd">Stop</span></p>
+  
+    <h4 class="txt-h4 mt24">How it was built</h4>
+    <div>
+
     </div>
+
+    <p class="txt-s">Built with <a class="link" href="//mapbox.com">Mapbox</a>, <a class="link" href="//github.com/osmlab/osm-wayback">OSM-Wayback</a>, Map Data &copy <a class="link" href="https://www.openstreetmap.org/about"> OpenStreetMap Contributors</a></p>
+
+    <button id="help" class="btn round">Collapse</button>
+
   </div>
-</div>
-<div id='map'></div>
+</section>
+
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiamVubmluZ3NhbmRlcnNvbiIsImEiOiIzMHZndnpvIn0.PS-j7fRK3HGU7IE8rbLT9A';
 
@@ -197,7 +276,7 @@ var timeline = new D3Timeline(function(brushEvent){
     
                     })
 
-function reloadTimeline(path){
+function reloadTimeline(path, params){
 
   var timelineCounts = [];
 //   document.getElementById('loading').style.display = 'block';
@@ -209,19 +288,34 @@ function reloadTimeline(path){
 
     data.features.forEach(function(f){
       d = new Date(f.properties.days_since_2005 * milliseconds_in_a_day + then.getTime())
-      timelineCounts.push({date: d, count: f.properties.edits})
+
+      if (params.maxDate && params.minDate){
+        if ( (d <= params.maxDate) && (d>= params.minDate) ) {
+          timelineCounts.push({date: d, count: f.properties.edits})
+        }
+      }else{
+        timelineCounts.push({date: d, count: f.properties.edits}) 
+      }
     })
+
+    params.maxDate = params.maxDate || d3.max(timelineCounts, function(d) { return d.date; });
+    params.minDate = params.minDate || d3.min(timelineCounts, function(d) { return d.date; });
 
     timeline.createD3Timeline({
       docID: "timeline-svg",
-      data:  timelineCounts//.slice(timelineCounts.length-100,timelineCounts.length)
+      data:  timelineCounts
     })
+
+    if(map.loaded()){
+      timeline.fireBrushEvent( [params.minDate, params.maxDate] )  
+    }
+    
     document.getElementById('loading').style.display = 'none';
   })
 }
 
 //Run the page!
-reloadTimeline(PATH);
+reloadTimeline(PATH, {});
     
 function reloadAll(){
   document.getElementById('loading').style.display = 'block';
@@ -229,51 +323,44 @@ function reloadAll(){
 //   },3000);
   makePath();
   map.getSource('data').setData(PATH)
-  reloadTimeline(PATH);
+  reloadTimeline(PATH, {});
 }
 
-document.getElementById('building-btn').addEventListener('click',function(){
-  if (TYPE!='building'){
-    this.className = "txt-s btn btn--pill-stroke btn--pill-vt is-active"
-    document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
-    document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    TYPE="building"
-    reloadAll();
-  }
-  
+document.getElementById('help').addEventListener('click',function(e){
+  document.getElementById('sidebar').style.display="none";
+  document.getElementById('main').className = "col col--12"
+  document.getElementById('show-help').style.display="block";
+  window.dispatchEvent(new Event('resize'));
 })
 
-document.getElementById('amenity-btn').addEventListener('click',function(){
-  if (TYPE!='amenity'){
-    this.className = "txt-s btn btn--pill-stroke btn--pill-vb is-active"
-    document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
-    document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    TYPE = "amenity"
+document.getElementById('show-help').addEventListener('click',function(e){
+  document.getElementById('sidebar').style.display="block";
+  document.getElementById('main').className = "col col--9"
+  this.style.display = 'none';
+  window.dispatchEvent(new Event('resize'));
+})
+
+
+//Register all the triggers
+document.getElementById('dataset-picker').addEventListener('change',function(e){
+  var dataset = e.target.value;
+  if (TYPE != dataset){
+    TYPE=dataset
     reloadAll();
   }
 })
 
-document.getElementById('highway-btn').addEventListener('click',function(){
-  if (TYPE!='highway'){
-    this.className = "txt-s btn btn--pill-stroke btn--pill-vc is-active"
-    document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
-    document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
-    document.getElementById('names-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    TYPE="highway"
-    reloadAll();
-  }
-})
-    
-document.getElementById('names-btn').addEventListener('click',function(){
-  if (TYPE!='tigerDel'){
-    this.className = "txt-s btn btn--pill-stroke btn--pill-vc is-active"
-    document.getElementById('building-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vt"
-    document.getElementById('amenity-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vb"
-    document.getElementById('highway-btn').className = "txt-s btn btn--stroke btn--pill-stroke btn--pill-vc"
-    TYPE="tigerDel"
-    reloadAll();
+document.getElementById('year-picker').addEventListener('change',function(e){
+  var year = e.target.value;
+  if(year==='All'){
+    reloadTimeline(PATH,{})
+  }else{
+    year = Number(year)
+    reloadTimeline(PATH, {
+      minDate: new Date(year,0,1),
+      maxDate: new Date(year,11,31)
+    })
+    // timeline.fireBrushEvent([new Date(year,0,1),new Date(year,11,31)]);
   }
 })
   
@@ -290,7 +377,6 @@ document.getElementById('Play').addEventListener('click',function(){
     var outOfBounds;
     animation = setInterval(function(){
       outOfBounds = timeline.stepBrush()
-      console.log(outOfBounds)
       if(outOfBounds){
         window.clearInterval(animation)
         playing = false

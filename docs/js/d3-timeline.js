@@ -9,6 +9,10 @@ var D3Timeline = function(brushEventFunction){
   var x,y,brush,data;
   
   var brushEvent = brushEventFunction;
+
+  this.fireBrushEvent = function(range){
+    brushEvent(range)
+  };
     
   function drawBrush(){
     d3.select('.brush').transition().call(brush.move, [x(startDate), x(endDate)]);
@@ -110,10 +114,12 @@ var D3Timeline = function(brushEventFunction){
 
     data = params.data //Or something else?
 
-    maxDate = params.maxDate || d3.max(data, function(d) { return d.date; })
-    minDate = params.minDate || d3.min(data, function(d) { return d.date; })
+    maxDate = d3.max(data, function(d) { return d.date; })
+    minDate = d3.min(data, function(d) { return d.date; })
 
     x.domain([minDate, maxDate]);
+
+    //max within the dates
     y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
     focus.append("path")

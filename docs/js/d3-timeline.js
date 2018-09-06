@@ -2,10 +2,11 @@ const milliseconds_in_a_day = (1000*60*60*24)
 
 var startDate, endDate
 var maxDate, minDate
+var brushOn
 
 var D3Timeline = function(brushEventFunction){
     
-  var x,y,brush,data,brushOn;
+  var x,y,brush,data;
   
   var brushEvent = brushEventFunction;
     
@@ -58,8 +59,8 @@ var D3Timeline = function(brushEventFunction){
           startDate = brushRange[0]
           endDate   = brushRange[1]
         }
-        
-        if (s == x.range() ){
+
+        if ( (startDate.getTime() == minDate.getTime()) && (endDate.getTime() == maxDate.getTime()) ){
           brushOn = false;
         }else{
           brushOn = true;

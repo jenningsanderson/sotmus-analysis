@@ -13,8 +13,8 @@
 
 button#show-help{
   position:absolute;
-  top:50px;
-  right:50px;
+  top:10px;
+  right:10px;
 }
     
 /* D3 Timeline */

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/tile-reduce": "^3.2.0",
     "@turf/area": "^6.0.1",
     "@turf/length": "^6.0.2",
     "@turf/turf": "^5.1.6",

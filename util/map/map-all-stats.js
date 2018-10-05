@@ -38,18 +38,23 @@ module.exports = function(data, tile, writeData, done) {
       done    = vIt.done
             
       if (!done){
-                
-        // Record the edge
+                       // Record the edge
         thisUser = version.properties['@user']
-        if (version.properties['@version']>1){
-          var key = `${thisUser},${prevUser}`
-          if ( users.hasOwnProperty(key) ){
-            users[key] += 1
-          }else{
-            users[key] = 1
-          }
-        }
+
+            if (version.properties['@version']>1){
+              var key = `${thisUser},${prevUser}`
+              if( key.indexOf('DaveHansenTiger')<0 ){
+                if ( key.indexOf('bot') < 0){
+                  if ( users.hasOwnProperty(key) ){
+                    users[key] += 1
+                  }else{
+                    users[key] = 1
+                  }
+                }
+              }
+            }
         prevUser = thisUser;
+
           
         //How about geometries?
         if(feat.geometry.type=="LineString"){
@@ -72,7 +77,7 @@ module.exports = function(data, tile, writeData, done) {
         var aM = []
         if ( version.properties.hasOwnProperty('aM') ){
           Object.keys(version.properties.aM).forEach(function(key){
-            aM.push(key + "-->" + version.properties.aM[key][0].replace(/[\t\r\n]/g, " ")+"|"+version.properties.aM[key][1].replace(/[\t\r\n]/g, " ")) 
+            aM.push(key + "-->" + version.properties.aM[key][0].replace(/[\t\r\n]/g, " ")+"<-->"+version.properties.aM[key][1].replace(/[\t\r\n]/g, " ")) 
           });
         }
           
@@ -95,7 +100,12 @@ module.exports = function(data, tile, writeData, done) {
           
         var name;
         if (feat.properties.name){
-          name = feat.properties.name.replace(/[\r\n]/g, " ")
+          name = feat.properties.name.replace(/[\t\r\n]/g, " ")
+        }
+          
+        var user;
+        if (feat.properties['@user']){
+          user = feat.properties['@user'].replace(/[\r\n]/g, " ");
         }
                                   
         //Write the row
@@ -108,14 +118,15 @@ module.exports = function(data, tile, writeData, done) {
               name,
               len,
               objArea,
-              aA.join(","),
-              aM.join(","),
-              aD.join(","),
-              version.properties['@user'].replace(/[\r\n]/g, " "),
+              aA.join("|-|"),
+              aM.join("|-|"),
+              aD.join("|-|"),
+              version.properties['@user'],
               version.properties['@version'],
               version.properties['@minorVersion'],
               version.properties['@validSince'],
               version.properties['@validUntil'],
+              version.properties['@changeset'],
               center.geometry.coordinates || undefined
         ].join("\t")}\n`)
       }

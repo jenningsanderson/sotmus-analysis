@@ -64,7 +64,7 @@ module.exports = function(data, tile, writeData, done) {
         var aA = []
         if ( version.properties.hasOwnProperty('aA') ){
           Object.keys(version.properties.aA).forEach(function(key){
-            aA.push(key + "-->" + version.properties.aA[key]) 
+            aA.push(key + "-->" + version.properties.aA[key].replace(/[\t\r\n]/g, " ")) 
           });
         }
           
@@ -72,7 +72,7 @@ module.exports = function(data, tile, writeData, done) {
         var aM = []
         if ( version.properties.hasOwnProperty('aM') ){
           Object.keys(version.properties.aM).forEach(function(key){
-            aM.push(key + "-->" + version.properties.aM[key][0]+"|"+version.properties.aM[key][1]) 
+            aM.push(key + "-->" + version.properties.aM[key][0].replace(/[\t\r\n]/g, " ")+"|"+version.properties.aM[key][1].replace(/[\t\r\n]/g, " ")) 
           });
         }
           
@@ -80,16 +80,22 @@ module.exports = function(data, tile, writeData, done) {
         var aD = []
         if ( version.properties.hasOwnProperty('aD') ){
           Object.keys(version.properties.aD).forEach(function(key){
-            aD.push(key + "-->" + version.properties.aD[key]) 
+            aD.push(key + "-->" + version.properties.aD[key].replace(/[\t\r\n]/g, " ")) 
           });
         }
 
         
         //location?
-        var center
+        var center = {'geometry':{'coordinates':null}}
         try{
           center = turf.centroid(version.geometry);
         }catch(e){
+            
+        }
+          
+        var name;
+        if (feat.properties.name){
+          name = feat.properties.name.replace(/[\r\n]/g, " ")
         }
                                   
         //Write the row
@@ -99,13 +105,13 @@ module.exports = function(data, tile, writeData, done) {
               feat.properties.amenity,
               feat.properties.highway,
               feat.properties.building,
-              feat.properties.name,
+              name,
               len,
               objArea,
               aA.join(","),
               aM.join(","),
               aD.join(","),
-              version.properties['@user'],
+              version.properties['@user'].replace(/[\r\n]/g, " "),
               version.properties['@version'],
               version.properties['@minorVersion'],
               version.properties['@validSince'],

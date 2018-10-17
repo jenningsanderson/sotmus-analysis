@@ -2,9 +2,9 @@
 
 **Purpose**: OSM data analysis can be an overwhelming and daunting task for a multitude of reasons. First, the data is _big_. While the definition of what consitutes as "big data" is often contested, a database with a planet's worth of geospatial data is certainly not a small dataset. Furthermore, in its most compact form, the data requires specific utilities to be consumed.
 
-The data is self-referential. As simple as the OSM data model aims to be, it becomes complicated out of it's primary context. Designed to work in a relational database, OSM objects require nontrivial reconstruction steps to exist on their own: the coordinates embedded in node objects need to be embedded into the individual objects that reference them.
+The data is self-referential. As simple as the OSM data model aims to be, it becomes complicated out of it's primary context. Designed to work in a relational database, OSM objects require nontrivial reconstruction steps to exist on their own: the coordinates embedded in node objects need to be extracted and re-embedded into the individual objects that reference them.
 
-
+Lastly, while the full-history of OSM is available, the nuances of the _entire editing history_ is hidden within.
 
 
 
@@ -15,10 +15,8 @@ adding the height of a building or the name of a road or store are all examples 
 It is also common for these metadata to be created at the same time as the object itself, with the version 1 geometry creation. When counting edits to the map, then, how should we quantify these different types of edits? That is, if measuring for a single unit of "work," are all edits equal?
 
 
-
-
 ### Workshop Approach
-To ensure that workshop attendees don't spend an inordinate amount of time wrangling with OSM data, we have created CSV exports for various regions of the US, corresponding mainly to major cities. These are not exports of raw OSM data, but instead specifically formatted CSVs typically with one OSM object or one edit to an OSM object per line. These human and machine-readable files are not always the most space efficient but they are designed to be easily consumed by popular data science tools such as Python or R. 
+To ensure that workshop attendees don't spend a lot of time wrangling wrangling OSM data, we have created CSV exports for various regions of the US, corresponding mainly to major cities. These are not exports of raw OSM data, but instead specifically formatted CSVs typically with one OSM object or one edit to an OSM object per line. These human and machine-readable files are not always the most space efficient but they are designed to be easily consumed by popular data science tools such as Python or R. 
 
 These CSVs differ from the raw editing record of OSM objects by including the following:
  - All edits to objects, including changes to minor geometries.

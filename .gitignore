@@ -6,3 +6,4 @@ node_modules/
 nepal_historical.mbtiles
 *INDEX*
 analysis/.ipynb_checkpoints/
+data/

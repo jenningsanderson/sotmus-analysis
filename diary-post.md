@@ -1,20 +1,28 @@
-State of the Map US 2018: OSM Data Analysis Workshop
+State of the Map US 2018: OpenStreetMap Data Analysis Workshop
 ----------------------------------------------------
-Seth Fitzsimmons & Jennings Anderson
+Jennings Anderson & Seth Fitzsimmons
 
 #### Workshop Abstract
 
 _With an overflowing Birds-of-a-Feather session on “OSM Data Analysis” the past few years at State of the Map US, we’d like to leave the nest as a flock. Many SotM-US attendees build and maintain various OSM data analysis systems, many of which have been and will be presented in independent sessions. Further, better analysis systems have yet to be built, and OSM analysis discussions often end with what is left to be built and how it can be done collaboratively. Our goal is to bring the data-analysis back into the discussion through an interactive workshop. Utilizing web-based interactive computation notebooks such as Zeppelin and Jupyter, we will step through the computation and visualization of various OpenStreetMap metrics._
 
+### 1. Introduction
+There is a story behind every object on the map. OSM is more than an open map of the world. It is the cumulative product of billions of edits by nearly 1M active contributors (and another 4M registered users). Each object can be edited multiple times. Each time the major attributes of an object are changed in OSM, the version number is incremented. To get a rough idea of how many major changes exist in the current map, we can count the version numbers for every object in the latest [osm-qa-tiles](https://osmlab.github.io/osm-qa-tiles/). This isn't _every single_ object in OSM, but includes nearly all roads, POIs, and buildings.
 
-### 1. Why do this?
-OpenStreetMap is far more than a single open map of the world. It is the cumulative product of billions of edits by nearly 1M active contributors (and another 4M registered users). Each object has the potential to be edited multiple times.
+> ![ Histogram of Object Versions from OSM-QA-Tiles ](assets/osm_objects_by_version.png)
 
-[ Histogram of Object Versions from OSM-QA-Tiles ]
+> OSM object versions by type. 475M objects in OSM have only been edited once, meaning they were created and haven't been subsequently edited in a major way. However, more than 200M have been edited more than once. _Note: Less than 10% of these edits are from bots, or imports._
 
-There are a plethora of community-maintained tools out there to help parse and process the massive OSM database though none of them currenlty handle the full-history of each object on the map. Questions such as "how many contributors have been active in this particular area?" are very difficult to answer at scale. As we should expect, this number varies drastically around the globe.
+To understand the evolution of the map, we need analysis tools that can expose these rich editing histories. There are a plethora of community-maintained tools out there to help parse and process the massive OSM database though none of them currenlty handle the full-history of each object on the map. Questions such as "how many contributors have been active in this particular area?" are then very difficult to answer at scale. As we should expect, this number varies drastically around the globe: 
 
-[ Histogram of # users active on every tile? or map?] 
+> ![ Map of 2015 users](assets/more_than_10_editors_2015.png)
+> Map of areas with more than 10 active contributors in 2015 [source](http://mapbox.github.io/osm-analysis-collab/editor-density?yearIdx=10&layer=0&minUsers=10&minObjects=1&#3/30.72/15.15). The euro-centric editing focus doesn't surprise us, but this map also shows another area with an unprecedent number of active contributors in 2015: Nepal. This was in response to the April 2015 Nepal Earthquake. 
+
+This is just one of many examples of the editing history of OSM being situatuational, complex, and difficult to conceptualize at a global scale. The purpose of this workshop was to introduce some new data analysis approaches that help us expose these histories.
+
+
+
+
 
 The purpose of this workshop was two-fold: first, we wanted to take the OSM data analysis discussion past the "how do we best handle the data?" to actual _analysis_ and second, we hoped that providing such an environment to explore the data would in turn generate more questions around the data: What is it that people want to measure? What are the insightful analytics?
 

@@ -16,18 +16,14 @@ There is a story behind every object on the map. OSM is more than an open map of
 To understand the evolution of the map, we need analysis tools that can expose these rich editing histories. There are a plethora of community-maintained tools out there to help parse and process the massive OSM database though none of them currenlty handle the full-history of each object on the map. Questions such as "how many contributors have been active in this particular area?" are then very difficult to answer at scale. As we should expect, this number varies drastically around the globe: 
 
 > ![ Map of 2015 users](assets/more_than_10_editors_2015.png)
-> Map of areas with more than 10 active contributors in 2015 [source](http://mapbox.github.io/osm-analysis-collab/editor-density?yearIdx=10&layer=0&minUsers=10&minObjects=1&#3/30.72/15.15). The euro-centric editing focus doesn't surprise us, but this map also shows another area with an unprecedent number of active contributors in 2015: Nepal. This was in response to the April 2015 Nepal Earthquake. 
-
-This is just one of many examples of the editing history of OSM being situatuational, complex, and difficult to conceptualize at a global scale. The purpose of this workshop was to introduce some new data analysis approaches that help us expose these histories.
-
-
-
-
+> Map of areas with more than 10 active contributors in 2015 [source](http://mapbox.github.io/osm-analysis-collab/editor-density?yearIdx=10&layer=0&minUsers=10&minObjects=1&#3/30.72/15.15). The euro-centric editing focus doesn't surprise us, but this map also shows another area with an unprecedent number of active contributors in 2015: Nepal. This was in response to the April 2015 Nepal Earthquake. This is just one of many examples of the OSM editing history being situational, complex and often difficult to conceptualize at scale.
 
 The purpose of this workshop was two-fold: first, we wanted to take the OSM data analysis discussion past the "how do we best handle the data?" to actual _analysis_ and second, we hoped that providing such an environment to explore the data would in turn generate more questions around the data: What is it that people want to measure? What are the insightful analytics?
 
 ### 2. Data Prepration
-This was the most hand-wavey part of the workshop, and intentionally so. Seth and I have been tackling the problems of historical OpenStreetMap data representation for a long time. We, along many others---and on the shoulders of previous attempts, have been building independent analysis infrastructures in parallel. We are hardly the first do to so, but are some of the few to have not given up and moved on.
+This was the most hand-wavey part of the workshop, and intentionally so. Seth and I have been tackling the problems of historical OpenStreetMap data representation for a long time. We have been building independent analysis infrastructures in parallel. We are hardly the first do to so, but are some of the few to have not given up and moved on. The first 
+
+
 
 #### Single dataset, multiple results
 Preparing for this workshop was one of the first times Seth and I have had a chance to compare some of the numbers produced by [OSMesa](//github.com/azavea/osmesa) and [OSM-Wayback](//github.com/osmlab/osm-waybac), our respective full-history analysis infrastructures. As expected, there were differences in how we count objects and versioning, but we were able to think through these differences and 
@@ -35,7 +31,6 @@ Preparing for this workshop was one of the first times Seth and I have had a cha
 ##### Differences:
 
 OSMesa generally produces and counts more objects than OSM-Wayback. This is because it (a) handles multipolygons and relations better (more true to the original OSM data structure) and (b) includes deleted objects. OSM-Wayback is designed to enrich a 
-
 
 
 ### 1. Interative Analysis Environment
@@ -55,6 +50,25 @@ We pre-processed data for a variety of regions for with the following resolution
 1. [Per User Stats]()
 2. [Per Changeset Stats]()
 3. [Per Edit Stats]()
+
+
+#### 1. Per User Stats
+A comprehensive summary of editing statistics (new buildings, edited buildings, km of new roads, edited roads, number of sidewalks, etc.) [see full list here]() that are totaled for each user active in the area of interest. This dataset is ideal for comparing editing activity among users. Who has edited the most? Who is creating the most buildings? This dataset is great for building leaderboards and getting a general idea of how many users are active in an area and what the distribution of work per user looks like.
+
+#### 2. Per Changeset Stats
+The same editing statistics as above (see [full list of columns here]()) but with higher resolution: grouped by the changeset. A changeset is a very logical unit of anlaysis for looking at the evolution of the map in a given area. Since each changeset can only be from one user, this is the next level of detail from user summaries. Since changeset IDs are sequential, this is a great dataset for time-series analysis.
+
+#### 3. Per Edit Stats
+This dataset records each individual edit to the map. This dataset is best for understanding exactly what changed on the map with each edit. Each edit tracks the tags changed as well as the geometry changes (if any). This dataset is (not surprisingly) significantly larger than the other two.
+
+
+
+
+
+
+
+
+
 
 
 

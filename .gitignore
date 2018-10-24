@@ -1,3 +1,5 @@
+.gitignore
+.DS_Store
 node_modules/
 *.history
 *.geometries
@@ -6,4 +8,5 @@ node_modules/
 nepal_historical.mbtiles
 *INDEX*
 analysis/.ipynb_checkpoints/
+cities/
 data/

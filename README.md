@@ -2,6 +2,10 @@
 
 See _description.md_ for a more thorought write-up of the workshop goals and approach. These are instructions to set up the analysis environment.
 
+## Obtaining the data
+The `data` directory currently includes only sample data for Detroit, Michigan. We do, however, have data prepared for other [US cities](#) that is available for download from the following S3 Bucket: 
+
+
 ## Running Locally
 
 The `analysis	` folder contains sample [Jupyter Notebooks](http://jupyter.org/) in `python3`. See the [Jupyter website](http://jupyter.org/) for install instructions. This can be as easy as `pip install jupyter notebook`, depending on your environment.

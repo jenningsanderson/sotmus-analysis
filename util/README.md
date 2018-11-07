@@ -1,3 +1,3 @@
-# using historical-qa-tiles as produced by osm-wayback
+# Parsing historical-qa-tiles as produced by osm-wayback
 
-(Link to OSM-Wayback)
+These are [tile-reduce](//github.com/mapbox/tile-reduce) scripts that produce one-edit-per-line CSV files from historical osm-qa-tilesets as produced by [osm-wayback](//github.com/osmlab/osm-wayback). 

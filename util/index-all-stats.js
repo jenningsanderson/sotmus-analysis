@@ -21,7 +21,7 @@ console.warn(path.resolve('../data/',file+'-all-stats.data'));
 tileReduce({
     map: path.join(__dirname, mapScript),
     zoom: 15,
-    sources: [{name: 'history', mbtiles: path.join("../cities/"+file+"_historical.mbtiles"), raw: false}],
+    sources: [{name: 'history', mbtiles: path.join("../cities/detroit_historical.mbtiles"), raw: false}],
     output: fs.createWriteStream('../data/'+file+'-all-stats.data'),
 //     bbox: [-83.287956,42.255192,-82.910439,42.450233]
 })

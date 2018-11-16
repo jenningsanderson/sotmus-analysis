@@ -22,21 +22,21 @@ module.exports = function(data, tile, writeData, done) {
   var layer = data.history.historical_topojson;
 
   var featCount = 0;
-   
+
   var users = {}
 
   layer.features.forEach(function(feat){
 
     featCount++;
-      
+
     hG = historyGenerator(feat.properties['@history'])
-      
+
     var done, version, vIt, newName, thisUser, prevUser
     while(!done){
       vIt     = hG.next();
       version = vIt.value
       done    = vIt.done
-            
+
       if (!done){
                        // Record the edge
         thisUser = version.properties['@user']
@@ -55,59 +55,58 @@ module.exports = function(data, tile, writeData, done) {
             }
         prevUser = thisUser;
 
-          
+
         //How about geometries?
         if(feat.geometry.type=="LineString"){
           var len = turf.length(feat.geometry)
         }
-          
+
         if (feat.geometry.type==="MultiPolygon" || feat.geometry.type==="Polygon"){
           var objArea = turf.area(feat.geometry)
         }
-                  
+
         //attributes?
         var aA = []
         if ( version.properties.hasOwnProperty('aA') ){
           Object.keys(version.properties.aA).forEach(function(key){
-            aA.push(key + "-->" + version.properties.aA[key].replace(/[\t\r\n]/g, " ")) 
+            aA.push(key + "-->" + version.properties.aA[key].replace(/[\t\r\n]/g, " "))
           });
         }
-          
+
         //attributes?
         var aM = []
         if ( version.properties.hasOwnProperty('aM') ){
           Object.keys(version.properties.aM).forEach(function(key){
-            aM.push(key + "-->" + version.properties.aM[key][0].replace(/[\t\r\n]/g, " ")+"<-->"+version.properties.aM[key][1].replace(/[\t\r\n]/g, " ")) 
+            aM.push(key + "-->" + version.properties.aM[key][0].replace(/[\t\r\n]/g, " ")+"<-->"+version.properties.aM[key][1].replace(/[\t\r\n]/g, " "))
           });
         }
-          
+
         //attributes?
         var aD = []
         if ( version.properties.hasOwnProperty('aD') ){
           Object.keys(version.properties.aD).forEach(function(key){
-            aD.push(key + "-->" + version.properties.aD[key].replace(/[\t\r\n]/g, " ")) 
+            aD.push(key + "-->" + version.properties.aD[key].replace(/[\t\r\n]/g, " "))
           });
         }
 
-        
         //location?
         var center = {'geometry':{'coordinates':null}}
         try{
           center = turf.centroid(version.geometry);
         }catch(e){
-            
+
         }
-          
+
         var name;
         if (feat.properties.name){
           name = feat.properties.name.replace(/[\t\r\n]/g, " ")
         }
-          
+
         var user;
         if (feat.properties['@user']){
           user = feat.properties['@user'].replace(/[\r\n]/g, " ");
         }
-                                  
+
         //Write the row
         writeData(`${[
               feat.properties['@id'],

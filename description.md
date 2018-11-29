@@ -64,21 +64,28 @@ Otherwise, it is possible to recreate the analysis environment locally with the 
 ## 4. Available Notebooks &amp; Datasets
 We pre-processed data for a variety of regions with the following resolution:
 
-1. [Per User Stats]()
-2. [Per Changeset Stats]()
-3. [Per Edit Stats]()
-
 
 #### 1. Per User Stats
-A comprehensive summary of editing statistics (new buildings, edited buildings, km of new roads, edited roads, number of sidewalks, etc.) [see full list here]() that are totaled for each user active in the area of interest. This dataset is ideal for comparing editing activity among users. Who has edited the most? Who is creating the most buildings? This dataset is great for building leaderboards and getting a general idea of how many users are active in an area and what the distribution of work per user looks like.
+A comprehensive summary of editing statistics (new buildings, edited buildings, km of new roads, edited roads, number of sidewalks, etc.) [see full list here](https://github.com/jenningsanderson/sotmus-analysis/blob/master/osmesa-attributes.md) that are totaled for each user active in the area of interest. This dataset is ideal for comparing editing activity among users. Who has edited the most? Who is creating the most buildings? This dataset is great for building leaderboards and getting a general idea of how many users are active in an area and what the distribution of work per user looks like.
 
 #### 2. Per Changeset Stats
-The same editing statistics as above (see [full list of columns here]()) but with higher resolution: grouped by the changeset. A changeset is a very logical unit of analysis for looking at the evolution of the map in a given area. Since each changeset can only be from one user, this is the next level of detail from user summaries. Since changeset IDs are sequential, this is a great dataset for time-series analysis. Unfortunately, due to a lack of changeset extracts for the selected regions (time constraints, fun!), OSMesa-generated roll-ups do not include actual timestamps. This caused some confusion for a group looking at Chicago, as visualization of their building import did not show the condensed timeframe during which many changesets were made when using changeset ID as the x-axis.
+The same editing statistics as above (see [full list of columns here](https://github.com/jenningsanderson/sotmus-analysis/blob/master/osmesa-attributes.md)) but with higher resolution: grouped by the changeset. A changeset is a very logical unit of analysis for looking at the evolution of the map in a given area. Since each changeset can only be from one user, this is the next level of detail from user summaries. Since changeset IDs are sequential, this is a great dataset for time-series analysis. Unfortunately, due to a lack of changeset extracts for the selected regions (time constraints, fun!), OSMesa-generated roll-ups do not include actual timestamps. This caused some confusion for a group looking at Chicago, as visualization of their building import did not show the condensed timeframe during which many changesets were made when using changeset ID as the x-axis.
 
 #### 3. Per Edit Stats
-This dataset records each individual edit to the map. This dataset is best for understanding exactly what changed on the map with each edit. Each edit tracks the tags changed as well as the geometry changes (if any). This dataset is (not surprisingly) significantly larger than the other two.
+This dataset records each individual edit to the map. This dataset is best for understanding exactly what changed on the map with each edit. Each edit tracks the tags changed as well as the geometry changes (if any). This dataset is significantly larger than the other two.
+
+### What cities are available?
+Detroit is currently available in [this repository](https://github.com/jenningsanderson/sotmus-analysis).
 
 
 
-## 5. Results (Example Notebooks)
 
+## 5. Example Notebooks
+
+ 1. [Per User Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
+ 2. [Per Changeset Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Changeset-Analysis.ipynb)
+ 3. [Per Edit Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
+
+
+![Editing heatmap](assets/edit-heatmap.gif)
+_Example heatmap from building edits in Detroit_

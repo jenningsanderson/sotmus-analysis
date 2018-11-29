@@ -25,3 +25,6 @@ To get started, click the analysis folder and open one of the notebooks:
 
 _The Per-Edit Analysis Notebook_
 
+![editing heatmap](assets/edit-heatmap.gif)
+
+_A heatmap and timeline of building edits in Detroit constructed by the per-edit notebook_

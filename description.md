@@ -14,13 +14,13 @@ We skip the messy data-wrangling parts of OSM data analysis by pre-processing a 
 ## 1. Background
 OpenStreetMap is more than an open map of the world: it is the cumulative product of billions of edits by nearly 1M active contributors (and another 4M registered users). Each object on the map  can be edited multiple times. Each time the major attributes of an object are changed in OSM, the version number is incremented. To get a general idea of how many major changes exist in the current map, we can count the version numbers for every object in the latest [osm-qa-tiles](https://osmlab.github.io/osm-qa-tiles/). This isn't _every single_ object in OSM, but includes nearly all roads, POIs, and buildings.
 
-> ![ Histogram of Object Versions from OSM-QA-Tiles ](assets/osm_objects_by_version.png)
+> ![ Histogram of Object Versions from OSM-QA-Tiles ](https://github.com/jenningsanderson/sotmus-analysis/raw/master/assets/osm_objects_by_version.png)
 
 > OSM object versions by type. 475M objects in OSM have only been edited once, meaning they were created and haven't been subsequently edited in a major way. However, more than 200M have been edited more than once. _Note: Less than 10% of these edits are from bots, or imports._
 
 Furthermore, when a contributor edits the map, the effect that their edit has depends on the type of OSM element that was modified. Moving nodes may also affect the geometry of ways and relations (lines and polygons) without those elements needing to be touched. Thus, a contributor's edits may have an indirect effect elsewhere (we track these as "minor versions"). Conversely, when editing a way or relation's tags, no geometries are modified, so counts within defined geographical boundaries often don't incorporate these edits. Therefore, to better understand the evolution of the map, we need analysis tools that can expose and account for these rich and nuanced editing histories. There are a plethora of community-maintained tools out there to help parse and process the massive OSM database though none of them currently handle the full-history and relationship between every object on the map. Questions such as "how many contributors have been active in this particular area?" are then very difficult to answer at scale. As we should expect, this number also varies drastically around the globe:
 
-> ![ Map of 2015 users](assets/more_than_10_editors_2015.png)
+> ![ Map of 2015 users](https://github.com/jenningsanderson/sotmus-analysis/raw/master/assets/more_than_10_editors_2015.png)
 > Map of areas with more than 10 active contributors in 2015 [source](http://mapbox.github.io/osm-analysis-collab/editor-density?yearIdx=10&layer=0&minUsers=10&minObjects=1&#3/30.72/15.15). The euro-centric editing focus doesn't surprise us, but this map also shows another area with an unprecedented number of active contributors in 2015: Nepal. This was in response to the April 2015 Nepal Earthquake. This is just one of many examples of the OSM editing history being situational, complex and often difficult to conceptualize at scale.
 
 
@@ -74,7 +74,21 @@ The same editing statistics as above (see [full list of columns here](https://gi
 This dataset records each individual edit to the map. This dataset is best for understanding exactly what changed on the map with each edit. Each edit tracks the tags changed as well as the geometry changes (if any). This dataset is significantly larger than the other two.
 
 ### What cities are available?
-Detroit is currently available in [this repository](https://github.com/jenningsanderson/sotmus-analysis). Data for the following cities are available for download below (Data as of September 30, 2018). To use these files, download them and put them in the `sotmus-analysis/data/` directory.
+Detroit is currently available in [this repository](https://github.com/jenningsanderson/sotmus-analysis). Data for a handful of North American cities is available at the end of this document.
+
+
+## 5. Example Notebooks
+
+ 1. [Per User Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
+ 2. [Per Changeset Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Changeset-Analysis.ipynb)
+ 3. [Per Edit Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
+
+
+> ![Editing heatmap](https://github.com/jenningsanderson/sotmus-analysis/raw/master/assets/edit-heatmap.gif)
+> _Example heatmap from building edits in Detroit_
+
+
+The following cities are available for download (Data as of September 30, 2018). To use these files, download them and put them in the `sotmus-analysis/data/` directory.
 
 | State / Country | City (Cities) | Per Edit | Per Changeset | Per User | 
 |------|-------|----------|---------------|----------|
@@ -118,14 +132,3 @@ Detroit is currently available in [this repository](https://github.com/jenningsa
 | Texas | San Antonio | [Per Edit](https://s3-us-west-1.amazonaws.com/openstreetmap-analysis/sotmus-city-histories/san-antonio_texas-all-stats.data) | [Per Changeset](https://osm-detroit.s3.amazonaws.com/data/changeset_stats-san-antonio_texas-20180930.csv) | [Per User](https://osm-detroit.s3.amazonaws.com/data/user_stats-san-antonio_texas-20180930.csv)
 | Virginia | Hampton Roads | [Per Edit](https://s3-us-west-1.amazonaws.com/openstreetmap-analysis/sotmus-city-histories/hampton-roads_virginia-all-stats.data) | [Per Changeset](https://osm-detroit.s3.amazonaws.com/data/changeset_stats-hampton-roads_virginia-20180930.csv) | [Per User](https://osm-detroit.s3.amazonaws.com/data/user_stats-hampton-roads_virginia-20180930.csv)
 | Washington | Seattle | [Per Edit](https://s3-us-west-1.amazonaws.com/openstreetmap-analysis/sotmus-city-histories/seattle_washington-all-stats.data) | [Per Changeset](https://osm-detroit.s3.amazonaws.com/data/changeset_stats-seattle_washington-20180930.csv) | [Per User](https://osm-detroit.s3.amazonaws.com/data/user_stats-seattle_washington-20180930.csv)
-
-
-## 5. Example Notebooks
-
- 1. [Per User Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
- 2. [Per Changeset Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Changeset-Analysis.ipynb)
- 3. [Per Edit Stats](https://github.com/jenningsanderson/sotmus-analysis/blob/master/analysis/Per-Edit-Analysis.ipynb)
-
-
-![Editing heatmap](assets/edit-heatmap.gif)
-_Example heatmap from building edits in Detroit_

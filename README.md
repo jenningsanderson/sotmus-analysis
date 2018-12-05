@@ -1,9 +1,11 @@
 # State of the Map US Analysis Workshop: Example Analysis
 
-See _description.md_ for a more thorought write-up of the workshop goals and approach. These are instructions to set up the analysis environment.
+These are instructions for running an OSM analysis environment locally using pre-processed editing histories and Jupyter notebook, as we did at the State of the Map US 2018 workshop.
+
+For a more thorough write-up of the workshop goals and approach, see [_description.md_](https://github.com/jenningsanderson/sotmus-analysis/blob/master/description.md).
 
 ## Obtaining the data
-The `data` directory currently includes only sample data for Detroit, Michigan. We do, however, have data prepared for a few other North American cities (see below) that is available for download from the following S3 Bucket: 
+The `data` directory currently includes sample data for Detroit, Michigan. See the list at the bottom of the page to download pre-processed data for a few other North American cities.
 
 
 ## Running Locally

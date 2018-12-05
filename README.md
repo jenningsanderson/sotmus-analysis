@@ -3,7 +3,7 @@
 See _description.md_ for a more thorought write-up of the workshop goals and approach. These are instructions to set up the analysis environment.
 
 ## Obtaining the data
-The `data` directory currently includes only sample data for Detroit, Michigan. We do, however, have data prepared for other [US cities](#) that is available for download from the following S3 Bucket: 
+The `data` directory currently includes only sample data for Detroit, Michigan. We do, however, have data prepared for a few other North American cities (see below) that is available for download from the following S3 Bucket: 
 
 
 ## Running Locally
@@ -30,7 +30,7 @@ _The Per-Edit Analysis Notebook_
 _A heatmap and timeline of building edits in Detroit constructed by the per-edit notebook_
 
 ### What other cities are available?
-Detroit is currently available in [this repository](https://github.com/jenningsanderson/sotmus-analysis). Data for the following cities are available for download below (Data as of September 30, 2018). To use these files, download them and put them in the `sotmus-analysis/data/` directory.
+Detroit is currently available in this repository. Data for the following cities are available for download below (Data as of September 30, 2018). To use these files, download them and put them in the `sotmus-analysis/data/` directory.
 
 
 | State / Country | City (Cities) | Per Edit | Per Changeset | Per User | 
